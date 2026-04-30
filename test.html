@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Phishing Detector Test Page</title>
+    <style>
+      body {
+        max-width: 720px;
+        margin: 48px auto;
+        padding: 0 20px;
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.6;
+      }
+
+      a {
+        display: inline-block;
+        margin: 8px 0;
+      }
+
+      .hidden-link {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Phishing Detector Test Page</h1>
+
+    <p>Safe link:</p>
+    <a href="https://example.com">Safe example website</a>
+
+    <p>Suspicious/phishing-style link:</p>
+    <a href="http://192.168.0.1/login-verify-update">Login update verification</a>
+
+    <p>Hidden phishing-style link:</p>
+    <a class="hidden-link" href="http://10.0.0.5/secure-bank-login-update"></a>
+  </body>
+</html>

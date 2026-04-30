@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Phishing Link Detector</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main class="popup">
+      <header class="header">
+        <div class="logo" aria-hidden="true">P</div>
+        <div>
+          <h1>Phishing Link Detector</h1>
+          <p id="currentUrl" class="url">Loading current tab...</p>
+        </div>
+      </header>
+
+      <section class="summary" aria-live="polite">
+        <div class="result-card">
+          <span class="label">Page status</span>
+          <div class="result safe" id="resultBadge">Safe</div>
+        </div>
+        <div class="score metric-card">
+          <span class="label">Score</span>
+          <strong id="scoreValue">0</strong>
+        </div>
+      </section>
+
+      <section class="stats">
+        <div class="metric-card">
+          <span class="label">Links scanned</span>
+          <strong id="totalScanned">0</strong>
+        </div>
+        <div class="metric-card">
+          <span class="label">Flagged links</span>
+          <strong id="flaggedLinks">0</strong>
+        </div>
+      </section>
+
+      <section class="reasons" aria-live="polite">
+        <h2>Latest explanation</h2>
+        <ul id="reasonList">
+          <li>No suspicious indicators found.</li>
+        </ul>
+      </section>
+
+      <button id="scanButton" type="button">Rescan current page</button>
+      <div class="footer-status">
+        <span class="pulse" aria-hidden="true"></span>
+        <p id="statusMessage" class="status">Automatic scanning is active.</p>
+      </div>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

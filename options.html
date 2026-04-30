@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Phishing Link Detector Settings</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body class="options-body">
+    <main class="options-page">
+      <section class="settings-panel">
+        <div class="logo settings-logo" aria-hidden="true">P</div>
+        <h1>Extension Settings</h1>
+        <p class="settings-copy">
+          Set the Flask backend URL used for phishing analysis.
+        </p>
+
+        <label class="input-label" for="apiBaseUrl">Backend API URL</label>
+        <input
+          id="apiBaseUrl"
+          type="url"
+          placeholder="http://localhost:5000"
+          autocomplete="off"
+        >
+
+        <button id="saveOptions" type="button">Save settings</button>
+        <p id="optionsStatus" class="status">Default: http://localhost:5000</p>
+      </section>
+    </main>
+
+    <script src="options.js"></script>
+  </body>
+</html>
