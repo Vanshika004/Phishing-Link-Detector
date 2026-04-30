@@ -21,6 +21,41 @@ A complete local cybersecurity demo with a Chrome Manifest V3 extension, a Flask
     `-- detector.py
 ```
 
+## Quick Start
+
+Run these commands from the project folder:
+
+```cmd
+cd "C:\Users\Vanshika\Desktop\Phishing Link Detector ext"
+pip install -r requirements.txt
+python app.py
+```
+
+Then load the extension:
+
+1. Open `chrome://extensions`.
+2. Enable `Developer mode`.
+3. Click `Load unpacked`.
+4. Select this project folder.
+5. Open extension details and enable `Allow access to file URLs` for testing `test.html`.
+
+Open the test page:
+
+```text
+C:\Users\Vanshika\Desktop\Phishing Link Detector ext\test.html
+```
+
+After changing extension files, reload the extension from `chrome://extensions` and refresh the webpage.
+
+To push updates to GitHub:
+
+```cmd
+git status
+git add .
+git commit -m "Describe your update"
+git push
+```
+
 ## Run The Flask Backend
 
 ```powershell
