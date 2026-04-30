@@ -10,6 +10,7 @@ const RESULT_SEVERITY = {
 let currentWorstResult = null;
 let pageFlaggedCount = 0;
 let alertPanel = null;
+let scanErrorCount = 0;
 
 function isHiddenLink(link) {
   const styles = window.getComputedStyle(link);
@@ -208,10 +209,32 @@ function updateStats(analysis) {
   );
 }
 
+function updateScanError(error) {
+  scanErrorCount += 1;
+  chrome.storage.local.set({
+    scanErrorCount,
+    lastError: error.message || "Backend request failed"
+  });
+}
+
 async function requestAnalysis(url, metadata = {}) {
-  const response = await chrome.runtime.sendMessage({
-    type: "CHECK_URL",
-    payload: { url, ...metadata }
+  const response = await new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(
+      {
+        type: "CHECK_URL",
+        payload: { url, ...metadata }
+      },
+      (messageResponse) => {
+        const runtimeError = chrome.runtime.lastError;
+
+        if (runtimeError) {
+          reject(new Error(runtimeError.message));
+          return;
+        }
+
+        resolve(messageResponse);
+      }
+    );
   });
 
   if (response?.ok && response.analysis) {
@@ -242,6 +265,7 @@ async function scanLink(link) {
   } catch (error) {
     link.dataset.scanError = error.message;
     link.title = `Unable to scan link: ${error.message}`;
+    updateScanError(error);
   }
 }
 
@@ -275,6 +299,7 @@ function scanPageLinks(root = document) {
 function resetPageStats() {
   currentWorstResult = null;
   pageFlaggedCount = 0;
+  scanErrorCount = 0;
 
   chrome.storage.local.set({
     pageUrl: window.location.href,
@@ -282,7 +307,9 @@ function resetPageStats() {
     suspiciousCount: 0,
     phishingCount: 0,
     lastResult: null,
-    worstResult: null
+    worstResult: null,
+    scanErrorCount: 0,
+    lastError: null
   });
 
   chrome.runtime.sendMessage({

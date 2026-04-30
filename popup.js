@@ -18,9 +18,12 @@ function setResultBadge(result) {
 function renderStats(stats) {
   const displayResult = stats.worstResult || stats.lastResult || {};
   const flagged = (stats.suspiciousCount || 0) + (stats.phishingCount || 0);
+  const scanErrors = stats.scanErrorCount || 0;
   const reasons = Array.isArray(displayResult.reasons) && displayResult.reasons.length > 0
     ? displayResult.reasons
-    : ["No suspicious indicators found."];
+    : scanErrors > 0
+      ? [`${scanErrors} link scan(s) failed`, stats.lastError || "Check Flask backend and extension permissions."]
+      : ["No suspicious indicators found."];
 
   setResultBadge(displayResult.result || (flagged > 0 ? "Suspicious" : "Safe"));
   scoreValueEl.textContent = displayResult.score ?? 0;
@@ -44,7 +47,9 @@ function loadStats() {
       suspiciousCount: 0,
       phishingCount: 0,
       lastResult: null,
-      worstResult: null
+      worstResult: null,
+      scanErrorCount: 0,
+      lastError: null
     },
     renderStats
   );
