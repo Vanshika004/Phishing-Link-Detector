@@ -1,3 +1,4 @@
+Just a beginner Project..but currently Vulnerable, Do not blindly believe it.. 
 # Phishing Link Detector
 
 A complete local cybersecurity demo with a Chrome Manifest V3 extension, a Flask API, heuristic phishing detection, and optional VirusTotal integration.
