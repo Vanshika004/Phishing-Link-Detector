@@ -1,4 +1,3 @@
-const DEFAULT_API_BASE_URL = "http://localhost:5000";
 const MAX_CONCURRENT_SCANS = 6;
 
 let activeScans = 0;
@@ -128,7 +127,15 @@ function protectLinkClick(event) {
   }
 
   const score = link.dataset.phishingScore || "0";
-  const reasons = normalizeReasons(JSON.parse(link.dataset.phishingReasons || "[]"));
+  let parsedReasons = [];
+
+  try {
+    parsedReasons = JSON.parse(link.dataset.phishingReasons || "[]");
+  } catch {
+    parsedReasons = ["Unable to read stored scan reasons"];
+  }
+
+  const reasons = normalizeReasons(parsedReasons);
   const warning = [
     `${result} link detected. Score: ${score}`,
     "",
@@ -161,20 +168,6 @@ function pickWorstResult(currentWorst, analysis) {
   }
 
   return currentWorst;
-}
-
-function getApiEndpoint() {
-  return new Promise((resolve) => {
-    chrome.storage.sync.get(
-      {
-        apiBaseUrl: DEFAULT_API_BASE_URL
-      },
-      (settings) => {
-        const baseUrl = settings.apiBaseUrl.replace(/\/+$/, "");
-        resolve(`${baseUrl}/api/check-url`);
-      }
-    );
-  });
 }
 
 function updateStats(analysis) {
@@ -216,26 +209,16 @@ function updateStats(analysis) {
 }
 
 async function requestAnalysis(url, metadata = {}) {
-  const apiEndpoint = await getApiEndpoint();
-  const response = await fetch(apiEndpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ url, ...metadata })
+  const response = await chrome.runtime.sendMessage({
+    type: "CHECK_URL",
+    payload: { url, ...metadata }
   });
 
-  const analysis = await response.json().catch(() => null);
-
-  if (analysis?.result && typeof analysis.score !== "undefined") {
-    return analysis;
+  if (response?.ok && response.analysis) {
+    return response.analysis;
   }
 
-  if (!response.ok) {
-    throw new Error(`Backend returned HTTP ${response.status}`);
-  }
-
-  throw new Error("Backend returned an invalid response");
+  throw new Error(response?.error || "Backend request failed");
 }
 
 async function scanLink(link) {

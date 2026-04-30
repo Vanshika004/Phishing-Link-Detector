@@ -153,10 +153,21 @@ For public deployment, run Flask with:
 ```powershell
 $env:PUBLIC_SERVER="true"
 $env:FLASK_DEBUG="false"
+$env:ALLOWED_ORIGINS="chrome-extension://your_extension_id"
 python app.py
 ```
 
 On hosting platforms, set these environment variables in the provider dashboard instead of PowerShell.
+
+Security-related environment variables:
+
+```text
+VIRUSTOTAL_API_KEY      Required for VirusTotal checks
+PUBLIC_SERVER=true      Allows Flask to bind publicly
+FLASK_DEBUG=false       Keeps debug mode off in deployment
+ALLOWED_ORIGINS         Comma-separated trusted origins for CORS
+TRUST_PROXY_HEADERS     Set true only behind a trusted reverse proxy
+```
 
 ## How It Works
 
@@ -229,5 +240,8 @@ VirusTotal suspicious            +2
 - The frontend never receives or stores the API key.
 - The backend validates URLs before analysis.
 - VirusTotal errors are handled gracefully and returned as non-fatal reasons.
+- Flask limits request body size to reduce abuse.
+- CORS is restricted to trusted extension/local origins instead of being fully open.
+- Logs remove URL query strings to avoid storing sensitive tokens.
 - Do not commit real API keys to GitHub.
 - Keep `.env`, logs, `__pycache__`, and `.pyc` files out of public repositories.
